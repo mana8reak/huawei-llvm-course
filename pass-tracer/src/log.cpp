@@ -15,7 +15,7 @@ namespace {
     struct ArrayHash {
         std::size_t operator()(const std::array<uint16_t, N> &ops) const noexcept {
             std::size_t h = 0;
-            for (uint16_t op: ops) {
+            for (uint16_t op : ops) {
                 h ^= std::hash<uint16_t>{}(op) + 0x9e3779b9 + (h << 6) + (h >> 2);
             }
             return h;
@@ -29,6 +29,7 @@ namespace {
         ArrayHash<N>
     >;
 
+    CountInstrSeq<1> count1;
     CountInstrSeq<2> count2;
     CountInstrSeq<3> count3;
     CountInstrSeq<4> count4;
@@ -77,6 +78,7 @@ namespace {
         dumped = true;
 
         fwrite(&c_total, sizeof(c_total), 1, f);
+        writeCount(f, count1);
         writeCount(f, count2);
         writeCount(f, count3);
         writeCount(f, count4);
@@ -148,6 +150,9 @@ extern "C" void logUserOperand(uint16_t user_op, uint16_t operand_op) {
     window[0] = user_op;
     window[1] = operand_op;
 
+    if (curr_window_len >= 1) {
+        incCounter(count1);
+    }
     if (curr_window_len >= 2) {
         incCounter(count2);
     }
