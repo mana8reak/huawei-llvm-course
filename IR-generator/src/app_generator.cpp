@@ -509,7 +509,7 @@ namespace {
 
     void buildApp(Runtime &rt, Function *function) {
         // define void @app()
-        ArrayType *bufferTy = ArrayType::get(rt.i32Ty, 192 * 384);
+        ArrayType *bufferTy = ArrayType::get(rt.i32Ty, 73728);
         BasicBlock *entry = BasicBlock::Create(rt.context, "entry", function);
         BasicBlock *loop = BasicBlock::Create(rt.context, "loop", function);
         BasicBlock *clicks = BasicBlock::Create(rt.context, "clicks", function);
@@ -530,11 +530,11 @@ namespace {
         Value *secondPtr = rt.builder.CreateInBoundsGEP(bufferTy, second,
                                                         {rt.i32(0), rt.i32(0)});
         rt.builder.CreateMemSet(firstPtr, rt.builder.getInt8(0),
-                                192 * 384 * sizeof(int), MaybeAlign(16));
+                                73728 * sizeof(int), MaybeAlign(16));
         rt.builder.CreateMemSet(secondPtr, rt.builder.getInt8(0),
-                                192 * 384 * sizeof(int), MaybeAlign(16));
+                                73728 * sizeof(int), MaybeAlign(16));
         rt.builder.CreateMemSet(mapPtr, rt.builder.getInt8(0),
-                                192 * 384 * sizeof(int), MaybeAlign(16));
+                                73728 * sizeof(int), MaybeAlign(16));
         // call void @createMap(ptr %mapPtr)
         rt.builder.CreateCall(rt.module.getFunction("createMap"), {mapPtr});
         rt.builder.CreateBr(loop);
